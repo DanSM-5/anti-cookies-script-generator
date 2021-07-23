@@ -14,6 +14,7 @@ const content = await getFileString(file, encoding);
 
 const replaceText = (string, info) => {
   const get = key => getReplacement(info, key);
+  const wrap = key => get(key).map(item => `\"${item}\"`);
   return string
     .replaceAll("{{NAME}}", get("NAME"))
     .replaceAll("{{WEB_PAGE}}", get("WEB_PAGE"))
@@ -21,8 +22,8 @@ const replaceText = (string, info) => {
     .replaceAll(`"{{MAX}}"`, get("MAX"))
     .replaceAll(`"{{RETRY_TIME}}"`, get("RETRY_TIME"))
     .replaceAll("//{{INCLUDES}}//", get("INCLUDES").join("\n"))
-    .replaceAll("//{{PARENTS}}//", get("PARENTS").join("\n    "))
-    .replaceAll("//{{TARGETS}}//", get("TARGETS").join("\n    "));
+    .replaceAll("//{{PARENTS}}//", wrap("PARENTS").join(",\n    "))
+    .replaceAll("//{{TARGETS}}//", wrap("TARGETS").join(",\n    "));
 };
 
 const processFile = info => {
