@@ -11,15 +11,19 @@ const encoding = "utf8";
 const getReplacement = (info, key) => info?.[key] ?? defaultInfo[key];
 
 const content = await getFileString(file, encoding);
-const replaceText = (string, info) => 
-  string.replaceAll("{{NAME}}", getReplacement(info, "NAME"))
-        .replaceAll("{{WEB_PAGE}}", getReplacement(info, "WEB_PAGE"))
-        .replaceAll("{{MATCH}}", getReplacement(info, "MATCH"))
-        .replaceAll(`"{{MAX}}"`, getReplacement(info, "MAX"))
-        .replaceAll(`"{{RETRY_TIME}}"`, getReplacement(info, "RETRY_TIME"))
-        .replaceAll("//{{INCLUDES}}//", getReplacement(info, "INCLUDES").join("\n"))
-        .replaceAll("//{{PARENTS}}//", getReplacement(info, "PARENTS").join("\n    "))
-        .replaceAll("//{{TARGETS}}//", getReplacement(info, "TARGETS").join("\n    "));
+
+const replaceText = (string, info) => {
+  const get = key => getReplacement(info, key);
+  return string
+    .replaceAll("{{NAME}}", get("NAME"))
+    .replaceAll("{{WEB_PAGE}}", get("WEB_PAGE"))
+    .replaceAll("{{MATCH}}", get("MATCH"))
+    .replaceAll(`"{{MAX}}"`, get("MAX"))
+    .replaceAll(`"{{RETRY_TIME}}"`, get("RETRY_TIME"))
+    .replaceAll("//{{INCLUDES}}//", get("INCLUDES").join("\n"))
+    .replaceAll("//{{PARENTS}}//", get("PARENTS").join("\n    "))
+    .replaceAll("//{{TARGETS}}//", get("TARGETS").join("\n    "));
+};
 
 const processFile = info => {
   return [getReplacement(info, "NAME").toLowerCase(), replaceText(content, info)];
