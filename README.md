@@ -17,3 +17,116 @@ MAX | `Number` | Max number of tries before the script stops. This is useful as 
 RETRY_TIME | `Number` | Time in seconds between attempts. | `1`
 TARGETS | `Array<String>` | CSS selectors that will be used to find the specific html element used for the cookie prompt to be removed. | `[]`
 PARENTS | `Array<String>` | CSS selectors for elements that need to be unblocked for navigation. Websites usualy set `overflow: hidden` on these elements to prevent the user from moving on their site. Elements on the parents array will be set to `overflow: auto` | ``[ `html`, `body` ]``
+
+#### Example of object
+
+```
+{
+  NAME: "Google",
+  WEB_PAGE: "google.com",
+  MATCH: "https://*.google.com/",
+  MAX: 5,
+  RETRY_TIME: 1,
+  INCLUDES: [
+    "// @include      *://*.google.com/*",
+  ],
+  TARGETS: [
+    `#lb`,
+    `.Fgvgjc`,
+    `#Sx9Kwc`,
+    `#xe7COe`,
+  ],
+  PARENTS: [
+    `html`,
+    `body`,
+  ],
+}
+```
+#### Script generated
+The above object will produce the following script with the name `anti-cookies-google.js`
+```
+// ==UserScript==
+// @name         Anti-Cookies Google
+// @version      0.1
+// @description  Remove cookies prompt for google.com
+// @author       ED
+// @match        https://*.google.com/
+// @include      *://*.google.com/*
+// @grant        none
+// ==/UserScript==
+
+(() => {
+  const name = "Google";
+  const label = `Anti-Cookies ${name}`;
+  console.log(`Running ${label}`);
+
+  const max = 5; // number of retries
+  const retryTime = 1; // in seconds
+  const targets = [
+    // Add here the css selectors of the elements to remove
+    "#lb",
+    ".Fgvgjc",
+    "#Sx9Kwc",
+    "#xe7COe"
+  ];
+
+  const parentElements = [
+    // add here other elements that may need to be unblocked
+    // string or element
+    "html",
+    "body"
+  ];
+
+  const setOverflowAuto = element => element.style.overflow = "auto";
+
+  const unblockElement = el => {
+    const element = typeof el === "string"
+      ? document.querySelector(el) ?? null
+      : el;
+
+    if (element) {
+      setOverflowAuto(element);
+    }
+  };
+
+  const removeElement = selector => {
+    const overlay = document.querySelector(selector);
+    if (!overlay) return false;
+    overlay.parentElement.removeChild(overlay);
+    return true;
+  };
+
+  const tryRemove = (remove, onFail, count = 0) => {
+    if (count > max) {
+      onFail();
+      return;
+    }
+    remove(count);
+  };
+
+  const onFailGenerator = selector => () => console.log(`Not found ${selector}`);
+
+  const processTarget = selector => {
+    console.log(`Trying to remove ${selector}`);
+    const onFail = onFailGenerator(selector);
+    const remove = count => {
+      const success = removeElement(selector);
+      if (success) {
+        parentElements.forEach(unblockElement);
+        console.log(`Target ${selector} was removed`);
+      } else {
+        setTimeout(() => tryRemove(remove, onFail, count + 1), retryTime * 1000);
+      }
+    };
+    tryRemove(remove, onFail, 0);
+  };
+
+  const initRemoveProcess = () => {
+    targets.forEach(processTarget);
+  };
+
+  initRemoveProcess();
+  console.log(`Ending ${label}`);
+})();
+```
+The script is ready to be copied into Tampermonkey for use.
