@@ -20,14 +20,14 @@
     "#lb",
     ".Fgvgjc",
     "#Sx9Kwc",
-    "#xe7COe",
+    "#xe7COe"
   ];
 
   const parentElements = [
     // add here other elements that may need to be unblocked
     // string or element
-    document.documentElement,
-    document.body,
+    "html",
+    "body"
   ];
 
   const setOverflowAuto = element => element.style.overflow = "auto";

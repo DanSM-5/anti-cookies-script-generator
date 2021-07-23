@@ -20,14 +20,14 @@
   const retryTime = 1; // in seconds
   const targets = [
     // Add here the css selectors of the elements to remove
-    "div[data-tracking-opt-in-overlay]",
+    "div[data-tracking-opt-in-overlay]"
   ];
 
   const parentElements = [
     // add here other elements that may need to be unblocked
     // string or element
-    document.documentElement,
-    document.body,
+    "html",
+    "body"
   ];
 
   const setOverflowAuto = element => element.style.overflow = "auto";
