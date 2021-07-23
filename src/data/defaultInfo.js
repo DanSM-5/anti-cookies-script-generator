@@ -7,7 +7,7 @@ export default {
   INCLUDES: [],
   TARGETS: [],
   PARENTS: [
-    `document.documentElement,`,
-    `document.body,`,
+    `html`,
+    `body`,
   ],
 }
