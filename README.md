@@ -43,7 +43,7 @@ PARENTS | `Array<String>` | CSS selectors for elements that need to be unblocked
 }
 ```
 #### Script generated
-The above object will produce the following script with the name `anti-cookies-google.js`
+The above object will produce the following script with the name `anti-cookies-google.js` under the `dist` folder.
 ```
 // ==UserScript==
 // @name         Anti-Cookies Google
