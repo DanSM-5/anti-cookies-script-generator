@@ -22,7 +22,7 @@ const replaceText = (string, info) =>
         .replaceAll("//{{TARGETS}}//", getReplacement(info, "TARGETS").join("\n    "));
 
 const processFile = info => {
-  return [info.NAME.toLowerCase(), replaceText(content, info)];
+  return [getReplacement(info, "NAME").toLowerCase(), replaceText(content, info)];
 };
 
 const write = ([fileName, content]) => 
