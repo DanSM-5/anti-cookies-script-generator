@@ -11,11 +11,11 @@ export default [{
     "// @include      *://*.fandom.com/*",
   ],
   TARGETS: [
-    `"div[data-tracking-opt-in-overlay]"`,
+    `div[data-tracking-opt-in-overlay]`,
   ],
   PARENTS: [
-    `document.documentElement`,
-    `document.body`,
+    `html`,
+    `body`,
   ],
 }, {
   NAME: "Google",
@@ -27,14 +27,14 @@ export default [{
     "// @include      *://*.google.com/*",
   ],
   TARGETS: [
-    `"#lb"`,
-    `".Fgvgjc"`,
-    `"#Sx9Kwc"`,
-    `"#xe7COe"`,
+    `#lb`,
+    `.Fgvgjc`,
+    `#Sx9Kwc`,
+    `#xe7COe`,
   ],
   PARENTS: [
-    `document.documentElement`,
-    `document.body`,
+    `html`,
+    `body`,
   ],
 }, {
   NAME: "Mega",
@@ -44,12 +44,12 @@ export default [{
   RETRY_TIME: 1,
   INCLUDES: [],
   TARGETS: [
-    `".fm-dialog-overlay"`,
-    `".mega-dialog.cookie-dialog"`,
+    `.fm-dialog-overlay`,
+    `.mega-dialog.cookie-dialog`,
   ],
   PARENTS: [
-    `document.documentElement`,
-    `document.body`,
+    `html`,
+    `body`,
   ],
 }, {
   NAME: "StackOverflow",
@@ -62,10 +62,10 @@ export default [{
     "// @include      *://stackoverflow.com/*",
   ],
   TARGETS: [
-    `"div.z-nav-fixed.ps-fixed"`,
+    `div.z-nav-fixed.ps-fixed`,
   ],
   PARENTS: [
-    `document.documentElement`,
-    `document.body`,
+    `html`,
+    `body`,
   ],
 }];
