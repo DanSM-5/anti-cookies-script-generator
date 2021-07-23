@@ -13,8 +13,8 @@
   const label = `Anti-Cookies ${name}`;
   console.log(`Running ${label}`);
 
-  const max = 5; // number of retries
-  const retryTime = 1; // in seconds
+  const max = "{{MAX}}"; // number of retries
+  const retryTime = "{{RETRY_TIME}}"; // in seconds
   const targets = [
     // Add here the css selectors of the elements to remove
     //{{TARGETS}}//
@@ -23,8 +23,7 @@
   const parentElements = [
     // add here other elements that may need to be unblocked
     // string or element
-    document.documentElement,
-    document.body,
+    //{{PARENTS}}//
   ];
 
   const setOverflowAuto = element => element.style.overflow = "auto";
