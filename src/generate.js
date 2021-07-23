@@ -26,7 +26,10 @@ const replaceText = (string, info) => {
 };
 
 const processFile = info => {
-  return [getReplacement(info, "NAME").toLowerCase(), replaceText(content, info)];
+  return [
+    getReplacement(info, "NAME").toLowerCase(),
+    replaceText(content, info)
+  ];
 };
 
 const write = ([fileName, content]) => 
