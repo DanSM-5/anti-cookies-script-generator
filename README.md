@@ -15,7 +15,7 @@ MATCH | `String` | The match will be used to match the specific web site where t
 INCLUDES | `Array<String>` | Similar to `MATCH` this value helps to add pages where the script should run. Please check [here](https://www.tampermonkey.net/documentation.php#_include) for more information. | `[]`
 MAX | `Number` | Max number of tries before the script stops. This is useful as many websites do not show a coockies prompt right away. Be mindful about how many retries you need. | `5`
 RETRY_TIME | `Number` | Time in seconds between attempts. | `1`
-TARGETS | `Array<String>` | CSS selectors that will be used to find the specific html element used for the cookie prompt to be removed. | `[]`
+TARGETS | `Array<String>` | CSS selectors that will be used to find the specific html element used for the cookie prompt to be removed. Each target will run independently of each other with and each one will keep track of its own number of attempts. | `[]`
 PARENTS | `Array<String>` | CSS selectors for elements that need to be unblocked for navigation. Websites usualy set `overflow: hidden` on these elements to prevent the user from moving on their site. Elements on the parents array will be set to `overflow: auto` | ``[ `html`, `body` ]``
 
 #### Example of object
