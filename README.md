@@ -14,6 +14,7 @@ WEB_PAGE | `String` | This property will be used in the description of the scrip
 MATCH | `String` | The match will be used to match the specific web site where the script should run. This follows Tampermonkey's rules. Please refer to its documentation [here](https://www.tampermonkey.net/documentation.php#_match). | `"https://*"`
 CICLES | `Number` | Number of cicles to run. Useful for pages that will add a cookies prompt more than once | `1` 
 LOOP | `Boolean` | Flag to force an infinite number of cicles. **Use it with CAUTION**. | `false`
+AUTHOR | `String` | Name for author field. You can add your name here. | `ED`
 INCLUDES | `Array<String>` | Similar to `MATCH` this value helps to add pages where the script should run. Please check [here](https://www.tampermonkey.net/documentation.php#_include) for more information. | `[]`
 MAX | `Number` | Max number of tries before the script stops. This is useful as many websites do not show a coockies prompt right away. Be mindful about how many retries you need. | `5`
 RETRY_TIME | `Number` | Time in seconds between attempts. | `1`
