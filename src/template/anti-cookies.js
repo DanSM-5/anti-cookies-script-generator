@@ -2,7 +2,7 @@
 // @name         Anti-Cookies {{NAME}}
 // @version      0.1
 // @description  Remove cookies prompt for {{WEB_PAGE}}
-// @author       ED
+// @author       {{AUTHOR}}
 // @match        {{MATCH}}
 //{{INCLUDES}}//
 // @grant        none
