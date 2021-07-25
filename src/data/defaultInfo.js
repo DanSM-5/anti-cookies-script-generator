@@ -13,4 +13,5 @@ export default {
   ],
   INITIAL_DELAY: 0,
   LOOP: false,
+  AUTHOR: "ED"
 }
