@@ -12,6 +12,8 @@ Property | Type | Description | Default value
 NAME | `String` | Name of the script to be created. It will be appended as a postfix e.g. `anti-cookies-[custom name].js`| `"script"`
 WEB_PAGE | `String` | This property will be used in the description of the script for Tampermonkey. It does not impact the script in any way | `"script"`
 MATCH | `String` | The match will be used to match the specific web site where the script should run. This follows Tampermonkey's rules. Please refer to its documentation [here](https://www.tampermonkey.net/documentation.php#_match). | `"https://*"`
+CICLES | `Number` | Number of cicles to run. Useful for pages that will add a cookies prompt more than once | `1` 
+LOOP | `Boolean` | Flag to force an infinite number of cicles. **Use it with CAUTION**. | `false`
 INCLUDES | `Array<String>` | Similar to `MATCH` this value helps to add pages where the script should run. Please check [here](https://www.tampermonkey.net/documentation.php#_include) for more information. | `[]`
 MAX | `Number` | Max number of tries before the script stops. This is useful as many websites do not show a coockies prompt right away. Be mindful about how many retries you need. | `5`
 RETRY_TIME | `Number` | Time in seconds between attempts. | `1`
@@ -25,20 +27,14 @@ PARENTS | `Array<String>` | CSS selectors for elements that need to be unblocked
   NAME: "Google",
   WEB_PAGE: "google.com",
   MATCH: "https://*.google.com/",
-  MAX: 5,
-  RETRY_TIME: 1,
   INCLUDES: [
-    "// @include      *://*.google.com/*",
+    "*://*.google.com/*",
   ],
   TARGETS: [
     `#lb`,
     `.Fgvgjc`,
     `#Sx9Kwc`,
     `#xe7COe`,
-  ],
-  PARENTS: [
-    `html`,
-    `body`,
   ],
 }
 ```
@@ -58,10 +54,12 @@ The above object will produce the following script with the name `anti-cookies-g
 (() => {
   const name = "Google";
   const label = `Anti-Cookies ${name}`;
-  console.log(`Running ${label}`);
-
+  
   const max = 5; // number of retries
   const retryTime = 1; // in seconds
+  const cicles = 1;
+  const initialDelay = 0;
+  const loop = false;
   const targets = [
     // Add here the css selectors of the elements to remove
     "#lb",
@@ -69,20 +67,26 @@ The above object will produce the following script with the name `anti-cookies-g
     "#Sx9Kwc",
     "#xe7COe"
   ];
-
   const parentElements = [
     // add here other elements that may need to be unblocked
     // string or element
     "html",
     "body"
   ];
+  
+  const getLogger = logLvlFunc => msg => logLvlFunc(`${label}: ${msg}`);
+  const log = getLogger(console.log);
+  const warn = getLogger(console.warn);
+  log(`Running`);
+
+  const getElement = el => typeof el === "string"
+    ? document.querySelector(el) ?? null
+    : el;
 
   const setOverflowAuto = element => element.style.overflow = "auto";
 
   const unblockElement = el => {
-    const element = typeof el === "string"
-      ? document.querySelector(el) ?? null
-      : el;
+    const element = getElement(el);
 
     if (element) {
       setOverflowAuto(element);
@@ -90,7 +94,7 @@ The above object will produce the following script with the name `anti-cookies-g
   };
 
   const removeElement = selector => {
-    const overlay = document.querySelector(selector);
+    const overlay = getElement(selector);
     if (!overlay) return false;
     overlay.parentElement.removeChild(overlay);
     return true;
@@ -104,29 +108,69 @@ The above object will produce the following script with the name `anti-cookies-g
     remove(count);
   };
 
-  const onFailGenerator = selector => () => console.log(`Not found ${selector}`);
+  const failMessage = selector => log(`Not found [${selector}]`);
 
-  const processTarget = selector => {
-    console.log(`Trying to remove ${selector}`);
-    const onFail = onFailGenerator(selector);
+  const shouldLoop = () => {
+    if (loop) {
+      warn("Looping is active");
+      return true;
+    }
+    return false;
+  };
+
+  const restartCicle = (retryFunc, selector, cicle) => {
+    if (shouldLoop() || cicle < cicles) {
+      log(`Starting cicle ${cicle + 1} for [${selector}]`);
+      retryFunc(0);
+    }
+  };
+
+  const trackCicles = (retry, selector) => {
+    let cicle = 0; // start from 0
+    return _ => restartCicle(retry, selector, ++cicle);
+  };
+
+  const getFunctionsForSelector = selector => {
+    const onFail = () => {
+      failMessage(selector);
+      restartCicleIfNeeded();
+    };
     const remove = count => {
       const success = removeElement(selector);
       if (success) {
         parentElements.forEach(unblockElement);
-        console.log(`Target ${selector} was removed`);
+        log(`Target [${selector}] was removed`);
+        restartCicleIfNeeded();
       } else {
-        setTimeout(() => tryRemove(remove, onFail, count + 1), retryTime * 1000);
+        retry(count + 1);
       }
     };
+    const retry = count => setTimeout(() => 
+      tryRemove(remove, onFail, count), retryTime * 1000);
+    const restartCicleIfNeeded = trackCicles(retry, selector);
+
+    return [ remove, onFail ];
+  };
+
+  const processTarget = selector => {
+    log(`Trying to remove [${selector}]`);
+    const [ remove, onFail ] = getFunctionsForSelector(selector);
     tryRemove(remove, onFail, 0);
   };
 
   const initRemoveProcess = () => {
-    targets.forEach(processTarget);
+    setTimeout(_ => 
+      targets.forEach(processTarget),
+      initialDelay * 1000
+    );
   };
 
+  if (loop) {
+    warn("Loop is active, be careful!");
+  }
+
   initRemoveProcess();
-  console.log(`Ending ${label}`);
+  log(`Ending ${label}`);
 })();
 ```
 The script is ready to be copied into Tampermonkey for use.
