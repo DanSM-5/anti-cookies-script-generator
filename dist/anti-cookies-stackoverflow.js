@@ -73,7 +73,7 @@
     return false;
   };
 
-  const restartCicle = (retryFunc, selector) => cicle => {
+  const restartCicle = (retryFunc, selector, cicle) => {
     if (shouldLoop() || cicle < cicles) {
       log(`Starting cicle ${cicle + 1} for [${selector}]`);
       retryFunc(0);
@@ -81,8 +81,8 @@
   };
 
   const trackCicles = (retry, selector) => {
-    let ci = 0;
-    return _ => restartCicle(retry, selector)(++ci);
+    let cicle = 0; // start from 0
+    return _ => restartCicle(retry, selector, ++cicle);
   };
 
   const getFunctionsForSelector = selector => {
