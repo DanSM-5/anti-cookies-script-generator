@@ -35,6 +35,7 @@ const replaceText = getTextReplacer([
   [ "NAME", "{{NAME}}", "get" ],
   [ "WEB_PAGE", "{{WEB_PAGE}}", "get" ],
   [ "MATCH", "{{MATCH}}", "get" ],
+  [ "AUTHOR", "{{AUTHOR}}", "get" ],
   [ "MAX", `"{{MAX}}"`, "get" ],
   [ "CICLES", `"{{CICLES}}"`, "get" ],
   [ "INITIAL_DELAY", `"{{INITIAL_DELAY}}"`, "get" ],
