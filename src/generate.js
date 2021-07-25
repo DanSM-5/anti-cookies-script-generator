@@ -19,23 +19,31 @@ const getReplacement = (info, key) => info?.[key] ?? defaultInfo[key];
 const getFunc = obj => key => getReplacement(obj, key);
 const processIncludesFunc = func => key => func(key).map(appendInclude).join("\n");
 const getElementsFunc = func => key => func(key).map(shouldWrap).join(",\n    ");
-const replaceText = (string, info) => {
+const getTextReplacer = configArr => (string, info) => {
   const get = getFunc(info);
   const getElements = getElementsFunc(get);
   const processIncludes = processIncludesFunc(get);
-  return string
-    .replaceAll("{{NAME}}", get("NAME"))
-    .replaceAll("{{WEB_PAGE}}", get("WEB_PAGE"))
-    .replaceAll("{{MATCH}}", get("MATCH"))
-    .replaceAll(`"{{MAX}}"`, get("MAX"))
-    .replaceAll(`"{{CICLES}}"`, get("CICLES"))
-    .replaceAll(`"{{INITIAL_DELAY}}"`, get("INITIAL_DELAY"))
-    .replaceAll(`"{{RETRY_TIME}}"`, get("RETRY_TIME"))
-    .replaceAll(`"{{LOOP}}"`, get("LOOP"))
-    .replaceAll("//{{INCLUDES}}//", processIncludes("INCLUDES"))
-    .replaceAll("//{{PARENTS}}//", getElements("PARENTS"))
-    .replaceAll("//{{TARGETS}}//", getElements("TARGETS"));
+  const handlers = { get, getElements, processIncludes };
+  return configArr.reduce((txt, config) => {
+    const [ key, target, func ] = config;
+    return txt.replaceAll(target, handlers[func](key));
+  }, string);
 };
+
+const replaceText = getTextReplacer([
+  /* key | target | handler func */
+  [ "NAME", "{{NAME}}", "get" ],
+  [ "WEB_PAGE", "{{WEB_PAGE}}", "get" ],
+  [ "MATCH", "{{MATCH}}", "get" ],
+  [ "MAX", `"{{MAX}}"`, "get" ],
+  [ "CICLES", `"{{CICLES}}"`, "get" ],
+  [ "INITIAL_DELAY", `"{{INITIAL_DELAY}}"`, "get" ],
+  [ "RETRY_TIME", `"{{RETRY_TIME}}"`, "get" ],
+  [ "LOOP", `"{{LOOP}}"`, "get" ],
+  [ "INCLUDES", "//{{INCLUDES}}//", "processIncludes" ],
+  [ "PARENTS", "//{{PARENTS}}//", "getElements" ],
+  [ "TARGETS", "//{{TARGETS}}//", "getElements" ],
+]);
 
 const content = await getFileString(file, encoding);
 
