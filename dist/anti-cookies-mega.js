@@ -32,10 +32,35 @@
   const getLogger = logLvlFunc => msg => logLvlFunc(`${label}: ${msg}`);
   const log = getLogger(console.log);
   const warn = getLogger(console.warn);
+  const error = getLogger(console.error);
   log(`Running`);
 
+  const getParentAt = (level, selector) => {
+    try {
+      let el = document.querySelector(selector) ?? null;
+      if (el) {
+        for (let i = 0; i < level; i++) {
+          el = el.parentElement;          
+        }
+      }
+      return el;
+    } catch (error) {
+      return null
+    }
+  };
+
+  const isSelectingParent = item => item.includes("^");
+
+  const getFromString = item => {
+    if (isSelectingParent(item)) {
+      const [ parentLevel, selector ] = item.split("^");
+      return getParentAt(parentLevel, selector);
+    }
+    return document.querySelector(item) ?? null
+  };
+
   const getElement = el => typeof el === "string"
-    ? document.querySelector(el) ?? null
+    ? getFromString(el) ?? null
     : el;
 
   const setOverflowAuto = element => element.style.overflow = "auto";
@@ -48,10 +73,19 @@
     }
   };
 
+  const safeRemove = overlay => {
+    try {
+      overlay.parentElement.removeChild(overlay);
+    } catch (e) {
+      error("Unexpected error trying to remove element. Will be marked as completed.");
+      console.error(e);
+    }
+  };
+
   const removeElement = selector => {
     const overlay = getElement(selector);
     if (!overlay) return false;
-    overlay.parentElement.removeChild(overlay);
+    safeRemove(overlay);
     return true;
   };
 
