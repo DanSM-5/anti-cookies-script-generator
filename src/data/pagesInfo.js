@@ -52,8 +52,8 @@ export default [{
     "*://*.reddit.com/r/*",
   ],
   TARGETS: [
-    `#POPUP_CONTAINER + div`,
-    `#POPUP_CONTAINER`,
+    `1^#POPUP_CONTAINER`,
+    `1^._3q-XSJ2vokDQrvdG6mR__k`,
   ],
   PARENTS: [
     `html`, // css selector
