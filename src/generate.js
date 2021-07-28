@@ -10,15 +10,15 @@ const encoding = "utf8";
 const jsFlag = "[JS]";
 
 /* File process and replacement */
-const isElement = item => !!~item.indexOf(jsFlag);
-const removeFlag = item => item.substr(jsFlag.length);
+const isElement = item => item.startsWith(jsFlag);
+const removeJSFlag = item => item.substr(jsFlag.length);
 const appendInclude = item => `// @include      ${item}`;
 const wrap = item => `\"${item}\"`;
-const shouldWrap = i => isElement(i) ? removeFlag(i) : wrap(i);
+const parseItem = i => isElement(i) ? removeJSFlag(i) : wrap(i);
 const getReplacement = (info, key) => info?.[key] ?? defaultInfo[key];
 const getFunc = obj => key => getReplacement(obj, key);
 const processIncludesFunc = func => key => func(key).map(appendInclude).join("\n");
-const getElementsFunc = func => key => func(key).map(shouldWrap).join(",\n    ");
+const getElementsFunc = func => key => func(key).map(parseItem).join(",\n    ");
 const getTextReplacer = configArr => (string, info) => {
   const get = getFunc(info);
   const getElements = getElementsFunc(get);
