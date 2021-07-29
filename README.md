@@ -18,29 +18,11 @@ AUTHOR | `String` | Name for author field. You can add your name here. | `ED`
 INCLUDES | `Array<String>` | Similar to `MATCH` this value helps to add pages where the script should run. Please check [here](https://www.tampermonkey.net/documentation.php#_include) for more information. | `[]`
 MAX | `Number` | Max number of tries before the script stops. This is useful as many websites do not show a coockies prompt right away. Be mindful about how many retries you need. | `5`
 RETRY_TIME | `Number` | Time in seconds between attempts. | `1`
-TARGETS | `Array<String>` | CSS selectors that will be used to find the specific html element used for the cookie prompt to be removed. Each target will run independently of each other with and each one will keep track of its own number of attempts. | `[]`
-PARENTS | `Array<String>` | CSS selectors for elements that need to be unblocked for navigation. Websites usualy set `overflow: hidden` on these elements to prevent the user from moving on their site. Elements on the parents array will be set to `overflow: auto` | ``[ `html`, `body` ]``
+TARGETS | `Array<String>` | Each targer should be a valid CSS selector that will be used to find the specific html element used for the cookie prompt to be removed. Each target will run independently of each other and each one will keep track of its own number of attempts. You can target the parent element of a CSS selector by adding the number of levels up for the parent followed by the caret symbol `^` before the selector. E.g. `"1^#popup"` to select the parent of the element with id `"#popup"`. A target can also be a HTML element like `document.body`. To do that you need to append `[JS]` before the element. E.g. `"[JS]document.body"`. | `[]`
+PARENTS | `Array<String>` | Each element of the PARENTS array should be a valid CSS selector. These elements need to be unblocked for navigation (usually the body or html element). Websites may set `overflow: hidden` on these elements to prevent the user from navigating on their site. Elements on the parents array will be set to `overflow: auto`. You can target the parent element of a CSS selector by adding the number of levels up for the parent followed by the caret symbol `^` before the selector. E.g. `"1^#popup"` to select the parent of the element with id `"#popup"`. A target can also be a HTML element like `document.body`. To do that you need to append `[JS]` before the element. E.g. `"[JS]document.body"`. | ``[ `html`, `body` ]``
 
 #### Example of object
 
-```
-{
-  NAME: "Google",
-  WEB_PAGE: "google.com",
-  MATCH: "https://*.google.com/",
-  INCLUDES: [
-    "*://*.google.com/*",
-  ],
-  TARGETS: [
-    `#lb`,
-    `.Fgvgjc`,
-    `#Sx9Kwc`,
-    `#xe7COe`,
-  ],
-}
-```
-#### Script generated
-The above object will produce the following script with the name `anti-cookies-google.js` under the `dist` folder.
 ```
 // ==UserScript==
 // @name         Anti-Cookies Google
@@ -78,10 +60,35 @@ The above object will produce the following script with the name `anti-cookies-g
   const getLogger = logLvlFunc => msg => logLvlFunc(`${label}: ${msg}`);
   const log = getLogger(console.log);
   const warn = getLogger(console.warn);
+  const error = getLogger(console.error);
   log(`Running`);
 
+  const getParentAt = (level, selector) => {
+    try {
+      let el = document.querySelector(selector) ?? null;
+      if (el) {
+        for (let i = 0; i < level; i++) {
+          el = el.parentElement;          
+        }
+      }
+      return el;
+    } catch (error) {
+      return null
+    }
+  };
+
+  const isSelectingParent = item => item.includes("^");
+
+  const getFromString = item => {
+    if (isSelectingParent(item)) {
+      const [ parentLevel, selector ] = item.split("^");
+      return getParentAt(parentLevel, selector);
+    }
+    return document.querySelector(item) ?? null
+  };
+
   const getElement = el => typeof el === "string"
-    ? document.querySelector(el) ?? null
+    ? getFromString(el) ?? null
     : el;
 
   const setOverflowAuto = element => element.style.overflow = "auto";
@@ -94,10 +101,19 @@ The above object will produce the following script with the name `anti-cookies-g
     }
   };
 
+  const safeRemove = overlay => {
+    try {
+      overlay.parentElement.removeChild(overlay);
+    } catch (e) {
+      error("Unexpected error trying to remove element. Will be marked as completed.");
+      console.error(e);
+    }
+  };
+
   const removeElement = selector => {
     const overlay = getElement(selector);
     if (!overlay) return false;
-    overlay.parentElement.removeChild(overlay);
+    safeRemove(overlay);
     return true;
   };
 
