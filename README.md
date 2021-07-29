@@ -24,6 +24,25 @@ PARENTS | `Array<String>` | Each element of the PARENTS array should be a valid 
 #### Example of object
 
 ```
+{
+  NAME: "Google",
+  WEB_PAGE: "google.com",
+  MATCH: "https://*.google.com/",
+  INCLUDES: [
+    "*://*.google.com/*",
+  ],
+  TARGETS: [
+    `#lb`,
+    `.Fgvgjc`,
+    `#Sx9Kwc`,
+    `#xe7COe`,
+  ],
+}
+```
+#### Script generated
+The above object will produce the following script with the name `anti-cookies-google.js` under the `dist` folder.
+
+```
 // ==UserScript==
 // @name         Anti-Cookies Google
 // @version      0.1
