@@ -45,7 +45,7 @@
       }
       return el;
     } catch (error) {
-      return null
+      return null;
     }
   };
 
@@ -56,7 +56,7 @@
       const [ parentLevel, selector ] = item.split("^");
       return getParentAt(parentLevel, selector);
     }
-    return document.querySelector(item) ?? null
+    return document.querySelector(item);
   };
 
   const getElement = el => typeof el === "string"
@@ -67,7 +67,6 @@
 
   const unblockElement = el => {
     const element = getElement(el);
-
     if (element) {
       setOverflowAuto(element);
     }

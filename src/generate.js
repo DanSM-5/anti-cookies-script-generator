@@ -49,19 +49,23 @@ const replaceText = getTextReplacer([
 const content = await getFileString(file, encoding);
 
 const processFile = info => {
-  return [
-    getReplacement(info, "NAME").toLowerCase(),
-    replaceText(content, info)
-  ];
+  return new Promise((res, rej) => {
+    try {
+      const fileInfo = [
+        getReplacement(info, "NAME").toLowerCase(),
+        replaceText(content, info)
+      ];
+      res(fileInfo);
+    } catch (error) {
+      rej(error);
+    }
+  });
 };
 
 const write = ([fileName, content]) => 
   writeFile(`${path}/${name}-${fileName}.js`, content);
 
-await Promise.all(
-  pagesInfo
-    .map(processFile)
-    .map(write)
-);
-
-console.log("Success!");
+await Promise.all(pagesInfo.map(processFile))
+  .then(fileInfo => Promise.all(fileInfo.map(write)))
+  .then(_ => console.log("Success!"))
+  .catch(err => console.error(err));
