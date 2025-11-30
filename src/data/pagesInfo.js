@@ -61,4 +61,28 @@ export default [{
   ],
   CICLES: 2,
   INITIAL_DELAY: 3,
+},
+{
+  NAME: "xda-devs",
+  MATCH: "*://*.xda-developers.com/",
+  INCLUDES: [
+    "*://*.xda-developers.com/*"
+  ],
+  TARGETS: [".qc-cmp-cleanslate.css-3n9te7"],
+},
+{
+  NAME: "youtube",
+  MATCH: "*://*.youtube.com/",
+  INCLUDES: [
+    "*://*.youtube.com/*"
+  ],
+  TARGETS: ["#lightbox #dialog", 'tp-yt-iron-overlay-backdrop'],
+},
+{
+  NAME: "twitter",
+  MATCH: "*://*.twitter.com/*",
+  INCLUDES: [
+    "*://*.twitter.com/*"
+  ],
+  TARGETS: ["#layers"],
 }];
