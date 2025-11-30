@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Anti-Cookies Google
+// @name         Anti-Cookies xda-devs
 // @version      0.1
-// @description  Remove cookies prompt for google.com
+// @description  Remove cookies prompt for script
 // @author       ED
-// @match        https://*.google.com/
-// @include      *://*.google.com/*
+// @match        *://*.xda-developers.com/
+// @include      *://*.xda-developers.com/*
 // @grant        none
 // ==/UserScript==
 
 (() => {
-  const name = "Google";
+  const name = "xda-devs";
   const label = `Anti-Cookies ${name}`;
 
   const max = 5; // number of retries
@@ -19,10 +19,7 @@
   const loop = false;
   const targets = [
     // Add here the css selectors of the elements to remove
-    "#lb",
-    ".Fgvgjc",
-    "#Sx9Kwc",
-    "#xe7COe"
+    ".qc-cmp-cleanslate.css-3n9te7"
   ];
   const parentElements = [
     // add here other elements that may need to be unblocked

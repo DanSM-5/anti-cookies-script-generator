@@ -1,34 +1,33 @@
 // ==UserScript==
-// @name         Anti-Cookies Google
+// @name         Anti-Cookies Reddit
 // @version      0.1
-// @description  Remove cookies prompt for google.com
+// @description  Remove cookies prompt for reddit.com
 // @author       ED
-// @match        https://*.google.com/
-// @include      *://*.google.com/*
+// @match        https://*.reddit.com/
+// @include      *://*.reddit.com/*
+// @include      *://*.reddit.com/r/*
 // @grant        none
 // ==/UserScript==
 
 (() => {
-  const name = "Google";
+  const name = "Reddit";
   const label = `Anti-Cookies ${name}`;
 
   const max = 5; // number of retries
   const retryTime = 1; // in seconds
-  const cicles = 1;
-  const initialDelay = 0;
+  const cicles = 2;
+  const initialDelay = 3;
   const loop = false;
   const targets = [
     // Add here the css selectors of the elements to remove
-    "#lb",
-    ".Fgvgjc",
-    "#Sx9Kwc",
-    "#xe7COe"
+    "1^#POPUP_CONTAINER",
+    "1^._3q-XSJ2vokDQrvdG6mR__k"
   ];
   const parentElements = [
     // add here other elements that may need to be unblocked
     // string or element
     "html",
-    "body"
+    document.body
   ];
 
   const getLogger = logLvlFunc => msg => logLvlFunc(`${label}: ${msg}`);

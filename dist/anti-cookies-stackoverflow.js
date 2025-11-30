@@ -12,7 +12,7 @@
 (() => {
   const name = "StackOverflow";
   const label = `Anti-Cookies ${name}`;
-  
+
   const max = 5; // number of retries
   const retryTime = 1; // in seconds
   const cicles = 1;
@@ -28,7 +28,7 @@
     "html",
     "body"
   ];
-  
+
   const getLogger = logLvlFunc => msg => logLvlFunc(`${label}: ${msg}`);
   const log = getLogger(console.log);
   const warn = getLogger(console.warn);
@@ -40,7 +40,7 @@
       let el = document.querySelector(selector) ?? null;
       if (el) {
         for (let i = 0; i < level; i++) {
-          el = el.parentElement;          
+          el = el.parentElement;
         }
       }
       return el;
@@ -133,7 +133,7 @@
         retry(count + 1);
       }
     };
-    const retry = count => setTimeout(() => 
+    const retry = count => setTimeout(() =>
       tryRemove(remove, onFail, count), retryTime * 1000);
     const restartCicleIfNeeded = trackCicles(retry, selector);
 
@@ -147,7 +147,7 @@
   };
 
   const initRemoveProcess = () => {
-    setTimeout(_ => 
+    setTimeout(_ =>
       targets.forEach(processTarget),
       initialDelay * 1000
     );
