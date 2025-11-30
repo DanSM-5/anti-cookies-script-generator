@@ -1,29 +1,35 @@
 Anti-Cookies Script Generator
 =======
 
-This project generates scripts that are intended to be used in **Tampermonkey** to remove the cookies prompt on the specified website.
+This project generates scripts that are intended to be used in [Tampermonkey](https://www.tampermonkey.net)/[Violent Monkey](https://violentmonkey.github.io/) to remove the cookies prompt on the specified websites.
 
-To generate a script this project uses the information from the array on `src/data/pagesInfo.js`. The data is an array of objects where each object target a specific website. Each object contain specific data about a website to be targeted by a script. There are some exaples populated on the array as example but none of those objects are requires. You can customize them or remove them as needed and only create the scripts that you require.
+To generate a script this project uses the data from [`src/data/pagesInfo.js`](./src/data/pagesInfo.js).
+The data is an array of objects where each object targets a specific website.
+Each object contain specific metadata about a website to allow for cookies
+popup removal. There are some exaples populated in the array but none of
+those objects are required.
+You can customize them or remove them as needed and only create the scripts that you need.
 
 ### Object format
 
 Property | Type | Description | Default value
 ---------|------|-------------|--------------
-NAME | `String` | Name of the script to be created. It will be appended as a postfix e.g. `anti-cookies-[custom name].js`| `"script"`
-WEB_PAGE | `String` | This property will be used in the description of the script for Tampermonkey. It does not impact the script in any way | `"script"`
-MATCH | `String` | The match will be used to match the specific web site where the script should run. This follows Tampermonkey's rules. Please refer to its documentation [here](https://www.tampermonkey.net/documentation.php#_match). | `"https://*"`
-CICLES | `Number` | Number of cicles to run. Useful for pages that will add a cookies prompt more than once | `1` 
+NAME | `string` | Name of the script to be created. It will be appended as a postfix e.g. `anti-cookies-[custom name].js`. | `"script"`
+WEB_PAGE | `string` | This property will be used in the description of the script for Tampermonkey. It does not impact the script in any way. | `"script"`
+MATCH | `string` | The match will be used to match the specific web site where the script should run. This follows Tampermonkey's rules. Please refer to its documentation [here](https://www.tampermonkey.net/documentation.php#_match). | `"https://*"`
+CICLES | `number` | Number of cicles to run. Useful for pages that will add a cookies prompt more than once. | `1` 
 LOOP | `Boolean` | Flag to force an infinite number of cicles. **Use it with CAUTION**. | `false`
-AUTHOR | `String` | Name for author field. You can add your name here. | `ED`
-INCLUDES | `Array<String>` | Similar to `MATCH` this value helps to add pages where the script should run. Please check [here](https://www.tampermonkey.net/documentation.php#_include) for more information. | `[]`
-MAX | `Number` | Max number of tries before the script stops. This is useful as many websites do not show a coockies prompt right away. Be mindful about how many retries you need. | `5`
-RETRY_TIME | `Number` | Time in seconds between attempts. | `1`
-TARGETS | `Array<String>` | Each targer should be a valid CSS selector that will be used to find the specific html element used for the cookie prompt to be removed. Each target will run independently of each other and each one will keep track of its own number of attempts. You can target the parent element of a CSS selector by adding the number of levels up for the parent followed by the caret symbol `^` before the selector. E.g. `"1^#popup"` to select the parent of the element with id `"#popup"`. A target can also be a HTML element like `document.body`. To do that you need to append `[JS]` before the element. E.g. `"[JS]document.body"`. | `[]`
-PARENTS | `Array<String>` | Each element of the PARENTS array should be a valid CSS selector. These elements need to be unblocked for navigation (usually the body or html element). Websites may set `overflow: hidden` on these elements to prevent the user from navigating on their site. Elements on the parents array will be set to `overflow: auto`. You can target the parent element of a CSS selector by adding the number of levels up for the parent followed by the caret symbol `^` before the selector. E.g. `"1^#popup"` to select the parent of the element with id `"#popup"`. A target can also be a HTML element like `document.body`. To do that you need to append `[JS]` before the element. E.g. `"[JS]document.body"`. | ``[ `html`, `body` ]``
+AUTHOR | `string` | Name for author field. You can add your name here. | `ED`
+INCLUDES | `Array<string>` | Similar to `MATCH` this value helps to add pages where the script should run. Please check [here](https://www.tampermonkey.net/documentation.php#_include) for more information. | `[]`
+MAX | `number` | Max number of tries before the script stops. This is useful as many websites do not show a coockies prompt right away. Be mindful about how many retries you need. | `5`
+RETRY_TIME | `number` | Time in seconds between attempts. | `1`
+TARGETS | `Array<string>` | Each targer should be a valid CSS selector that will be used to find the specific html element used for the cookie prompt to be removed. Each target will run independently of each other and each one will keep track of its own number of retry attempts. There is an special **"parent"** selector helper by adding the number of levels up for the parent followed by the caret symbol `^` before the selector. E.g. `"1^#popup"` to select the parent of the element with id `"#popup"`. A target can also be a HTML element like `document.body`. To do that you need to append `[JS]` before the element. E.g. `"[JS]document.body"`. | `[]`
+PARENTS | `Array<string>` | Each element of the PARENTS array should be a valid CSS selector. These elements need to be unblocked for navigation (usually the body or html element). Websites may set `overflow: hidden` on these elements to prevent the user from navigating on their site. Elements on the parents array will be set to `overflow: auto`. You can target the parent element of a CSS selector by adding the number of levels up for the parent followed by the caret symbol `^` before the selector. E.g. `"1^#popup"` to select the parent of the element with id `"#popup"`. A target can also be a HTML element like `document.body`. To do that you need to append `[JS]` before the element. E.g. `"[JS]document.body"`. | ``[ `html`, `body` ]``
+INITIAL_DELAY | `number` | Delay in seconds to start the script. Useful when cookies popups appear after some delay. | `0`
 
 #### Example of object
 
-```
+```javascript
 {
   NAME: "Google",
   WEB_PAGE: "google.com",
@@ -39,10 +45,11 @@ PARENTS | `Array<String>` | Each element of the PARENTS array should be a valid 
   ],
 }
 ```
+
 #### Script generated
 The above object will produce the following script with the name `anti-cookies-google.js` under the `dist` folder.
 
-```
+```javascript
 // ==UserScript==
 // @name         Anti-Cookies Google
 // @version      0.1
