@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * @typedef {{ NAME?: string; WEB_PAGE?: string; MATCH?: string; INCLUDES?: string[]; TARGETS?: string[]; CICLES?: number; LOOP?: boolean; AUTHOR?: string; PARENTS?: string[]; MAX?: number; RETRY_TIME?: number; }} InfoPage
+ * @typedef {{ NAME?: string; WEB_PAGE?: string; MATCH?: string; INCLUDES?: string[]; TARGETS?: string[]; CICLES?: number; LOOP?: boolean; AUTHOR?: string; PARENTS?: string[]; MAX?: number; RETRY_TIME?: number; INITIAL_DELAY?: number }} InfoPage
  */
 
 /**

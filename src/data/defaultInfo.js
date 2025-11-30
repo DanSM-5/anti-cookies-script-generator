@@ -1,6 +1,6 @@
 
 /**
- * @type {{ NAME: string; WEB_PAGE: string; MATCH: string; INCLUDES: string[]; TARGETS: string[]; CICLES: number; LOOP: boolean; AUTHOR: string; PARENTS: string[]; MAX: number; RETRY_TIME: number; }} InfoPage
+ * @type {{ NAME: string; WEB_PAGE: string; MATCH: string; INCLUDES: string[]; TARGETS: string[]; CICLES: number; LOOP: boolean; AUTHOR: string; PARENTS: string[]; MAX: number; RETRY_TIME: number; INITIAL_DELAY: number }} InfoPage
  */
 export default {
   NAME: "script",
