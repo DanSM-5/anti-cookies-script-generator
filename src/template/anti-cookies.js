@@ -11,7 +11,7 @@
 (() => {
   const name = "{{NAME}}";
   const label = `Anti-Cookies ${name}`;
-  
+
   const max = "{{MAX}}"; // number of retries
   const retryTime = "{{RETRY_TIME}}"; // in seconds
   const cicles = "{{CICLES}}";
@@ -26,7 +26,7 @@
     // string or element
     //{{PARENTS}}//
   ];
-  
+
   const getLogger = logLvlFunc => msg => logLvlFunc(`${label}: ${msg}`);
   const log = getLogger(console.log);
   const warn = getLogger(console.warn);
@@ -38,7 +38,7 @@
       let el = document.querySelector(selector) ?? null;
       if (el) {
         for (let i = 0; i < level; i++) {
-          el = el.parentElement;          
+          el = el.parentElement;
         }
       }
       return el;
@@ -131,7 +131,7 @@
         retry(count + 1);
       }
     };
-    const retry = count => setTimeout(() => 
+    const retry = count => setTimeout(() =>
       tryRemove(remove, onFail, count), retryTime * 1000);
     const restartCicleIfNeeded = trackCicles(retry, selector);
 
@@ -145,7 +145,7 @@
   };
 
   const initRemoveProcess = () => {
-    setTimeout(_ => 
+    setTimeout(_ =>
       targets.forEach(processTarget),
       initialDelay * 1000
     );
